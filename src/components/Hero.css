@@ -1,0 +1,135 @@
+.hero-section {
+  position: relative;
+  height: 100vh;
+  min-height: 800px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%; /* Extra height for parallax */
+  z-index: 1;
+}
+
+.hero-background img,
+.hero-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
+}
+
+.hero-video.active {
+  opacity: 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(23, 42, 79, 0.5) 0%, rgba(45, 212, 191, 0.2) 100%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  color: var(--color-white);
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-top: 80px;
+}
+
+.hero-content h1 {
+  font-size: 4rem;
+  margin-bottom: 24px;
+  text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.hero-content .highlight {
+  color: var(--color-gold);
+  font-weight: 800;
+  text-shadow: 0 2px 10px rgba(195, 176, 30, 0.4);
+}
+
+.hero-content p {
+  font-size: 1.25rem;
+  margin-bottom: 40px;
+  font-family: var(--font-body);
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  font-weight: 400;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.glow-effect {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.glow-effect:hover {
+  box-shadow: 0 0 30px rgba(45, 212, 191, 0.5);
+}
+
+.organic-divider {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  z-index: 5;
+  line-height: 0;
+}
+
+.organic-divider svg {
+  display: block;
+  width: 100%;
+  height: 150px;
+}
+
+/* Add some simple particles animation */
+.particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  background-image: radial-gradient(var(--color-white) 1px, transparent 1px);
+  background-size: 100px 100px;
+  opacity: 0.2;
+  animation: floatingParticles 20s linear infinite;
+}
+
+@keyframes floatingParticles {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100px); }
+}
+
+@media(max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+  .hero-buttons {
+    flex-direction: column;
+    padding: 0 20px;
+  }
+}

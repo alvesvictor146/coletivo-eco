@@ -1,0 +1,77 @@
+.experiences-section {
+  background-color: var(--color-sand);
+  position: relative;
+}
+
+.section-header {
+  margin-bottom: 60px;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  color: var(--color-blue-ocean);
+  margin-bottom: 15px;
+}
+
+.section-header p {
+  color: #4a5568;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.experiences-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.experience-card {
+  padding: 40px 30px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: var(--color-white);
+  border: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+}
+
+.experience-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-premium);
+  border-radius: 24px;
+}
+
+.icon-wrapper {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 20px;
+  background-color: var(--color-blue-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: var(--color-blue-ocean);
+  transition: all 0.3s ease;
+}
+
+.experience-card:hover .icon-wrapper {
+  background-color: var(--color-blue-ocean);
+  color: var(--color-white);
+  transform: scale(1.1);
+}
+
+.experience-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+}
+
+.experience-card p {
+  font-size: 0.95rem;
+  color: #4a5568;
+}
+
+.text-center {
+  text-align: center;
+}

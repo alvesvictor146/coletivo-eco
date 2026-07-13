@@ -1,0 +1,144 @@
+/* CTA Section */
+.cta-section {
+  position: relative;
+  padding: 120px 0;
+  text-align: center;
+  overflow: hidden;
+}
+
+.cta-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.cta-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cta-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(23, 42, 79, 0.85); /* Overlay azul solicitado */
+}
+
+.cta-content {
+  position: relative;
+  z-index: 10;
+  color: var(--color-white);
+}
+
+.cta-content h2 {
+  font-size: 3rem;
+  margin-bottom: 40px;
+}
+
+/* Footer Section */
+.footer-section {
+  background-color: var(--color-blue-ocean);
+  color: var(--color-white);
+  padding: 80px 0 20px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 50px;
+  margin-bottom: 60px;
+}
+
+.footer-logo {
+  height: 80px;
+  margin-bottom: 20px;
+  background-color: var(--color-white);
+  padding: 10px;
+  border-radius: 50%;
+}
+
+.footer-col.brand p {
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 25px;
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+}
+
+.social-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255,255,255,0.1);
+  color: var(--color-white);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+  background-color: var(--color-gold);
+  transform: translateY(-3px);
+}
+
+.footer-col h4 {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.footer-col h4::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background-color: var(--color-gold);
+}
+
+.footer-col ul {
+  list-style: none;
+}
+
+.footer-col ul li {
+  margin-bottom: 12px;
+}
+
+.footer-col ul li a {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-col ul li a:hover {
+  color: var(--color-white);
+}
+
+.footer-col p {
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.footer-col p strong {
+  color: var(--color-white);
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.5);
+  font-size: 0.9rem;
+}
