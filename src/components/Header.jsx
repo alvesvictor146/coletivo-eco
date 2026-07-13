@@ -15,9 +15,9 @@ const Header = () => {
   return (
     <header className={`header ${scrolled ? 'scrolled glass-panel' : ''}`}>
       <div className="container header-container">
-        <div className="logo-container">
-          <img src="/images/logo.png" alt="Coletivo Eco Logo" className="logo" />
-        </div>
+        <a href="#" className="logo-container">
+          <img src="images/logo.png" alt="Coletivo Eco Logo" className="logo" />
+        </a>
         <nav className="nav-links">
           <a href="#experiencias">Experiências</a>
           <a href="#pacotes">Pacotes</a>

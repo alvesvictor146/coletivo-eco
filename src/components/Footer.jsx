@@ -7,7 +7,7 @@ const Footer = () => {
     <>
       <section id="orcamento" className="cta-section">
         <div className="cta-background">
-          <img src="/images/hero_drone_view_1783969284798.png" alt="Call to action" />
+          <img src="images/hero_drone_view_1783969284798.png" alt="Call to action" />
           <div className="cta-overlay"></div>
         </div>
         <div className="container cta-content reveal-up">
@@ -20,7 +20,7 @@ const Footer = () => {
         <div className="container">
           <div className="footer-grid">
             <div className="footer-col brand">
-              <img src="/images/logo.png" alt="Coletivo Eco" className="footer-logo" />
+              <img src="images/logo.png" alt="Coletivo Eco" className="footer-logo" />
               <p>Experiências inesquecíveis em cachoeiras, rios cristalinos, trilhas e destinos exclusivos no Mato Grosso.</p>
               <div className="social-links">
                 <a href="#"><FaInstagram /></a>
