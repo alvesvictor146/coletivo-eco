@@ -12,7 +12,10 @@ const Footer = () => {
         </div>
         <div className="container cta-content reveal-up">
           <h2>Sua próxima aventura começa agora.</h2>
-          <button className="btn-green">Solicitar orçamento</button>
+          <p style={{marginBottom: "20px", fontSize: "1.1rem", textShadow: "0 2px 5px rgba(0,0,0,0.5)"}}>
+            Fale com nossa equipe e receba o roteiro completo com valores, datas e disponibilidade.
+          </p>
+          <a href="https://wa.me/5511953823911?text=Olá!%20Gostaria%20de%20receber%20os%20roteiros%20da%20Coletivo%20Eco." target="_blank" rel="noopener noreferrer" className="btn-green" style={{display: "inline-block", padding: "15px 30px"}}>Quero receber o roteiro</a>
         </div>
       </section>
 

@@ -34,12 +34,21 @@ const Testimonials = () => {
           
           <div className="carousel-track" ref={carouselRef}>
             {testimonialsData.map((testimonial, idx) => (
-              <div key={idx} className="testimonial-card glass-panel">
-                <div className="stars">
-                  {[...Array(testimonial.stars)].map((_, i) => <FaStar key={i} />)}
+              <div key={idx} className="testimonial-card google-print">
+                <div className="google-header">
+                  <div className="google-avatar">{testimonial.name.charAt(0)}</div>
+                  <div className="google-info">
+                    <span className="google-name">{testimonial.name}</span>
+                    <span className="google-date">1 mês atrás</span>
+                  </div>
+                  <div className="google-logo">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" width="20" />
+                  </div>
                 </div>
-                <p className="testimonial-text">"{testimonial.text}"</p>
-                <h4 className="testimonial-name">- {testimonial.name}</h4>
+                <div className="google-stars">
+                  {[...Array(testimonial.stars)].map((_, i) => <FaStar key={i} color="#fbbc04" />)}
+                </div>
+                <p className="google-text">{testimonial.text}</p>
               </div>
             ))}
           </div>

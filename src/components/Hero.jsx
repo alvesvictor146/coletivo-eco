@@ -59,19 +59,31 @@ const Hero = () => {
 
       <div className="container hero-content">
         <h1 className="reveal-up delay-100">
-          Descubra as Maravilhas<br />
-          Naturais do <span className="highlight">Mato Grosso</span>
+          A Magia da <span className="highlight">Chapada dos Guimarães</span>
         </h1>
         <p className="reveal-up delay-200">
           Experiências inesquecíveis em cachoeiras, rios cristalinos, trilhas e destinos 
-          exclusivos preparados para quem deseja viver a natureza em sua melhor versão.
+          exclusivos preparados para quem deseja viver a natureza com conforto e segurança.
         </p>
-        <div className="hero-buttons reveal-up delay-300">
-          <a href="#pacotes" className="btn-primary glow-effect">
-            Explorar Pacotes <FaArrowRight />
-          </a>
-          <a href="#orcamento" className="btn-green">
-            Solicitar Orçamento
+
+        <div className="social-proof-hero reveal-up delay-300">
+          <div className="proof-item">
+            <span>🏆</span>
+            <strong>Traveller's Choice 2025</strong>
+          </div>
+          <div className="proof-item flex-col">
+            <span className="stars">⭐⭐⭐⭐⭐</span>
+            <span className="proof-text"><strong>5.0</strong> (71 avaliações Google)</span>
+          </div>
+          <div className="proof-item">
+            <span>👥</span>
+            Mais de <strong>2.000</strong> viajantes atendidos
+          </div>
+        </div>
+        <div className="hero-cta-wrapper reveal-up delay-400">
+          <p className="hero-cta-context">Fale com nossa equipe e receba o roteiro completo com valores, datas e disponibilidade.</p>
+          <a href="https://wa.me/5511953823911?text=Olá!%20Gostaria%20de%20receber%20os%20roteiros%20da%20Chapada%20dos%20Guimarães." target="_blank" rel="noopener noreferrer" className="btn-primary glow-effect pulse-btn">
+            Quero receber o roteiro
           </a>
         </div>
       </div>

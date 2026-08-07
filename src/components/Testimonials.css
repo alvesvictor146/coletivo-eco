@@ -105,3 +105,65 @@
     display: none;
   }
 }
+
+.google-print {
+  background: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+  padding: 24px !important;
+  border: 1px solid #e0e0e0;
+}
+
+.google-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.google-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-right: 12px;
+}
+
+.google-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.google-name {
+  font-weight: 600;
+  color: #202124;
+  font-size: 0.95rem;
+}
+
+.google-date {
+  color: #70757a;
+  font-size: 0.8rem;
+}
+
+.google-logo {
+  margin-left: auto;
+}
+
+.google-stars {
+  margin-bottom: 10px;
+  display: flex;
+  gap: 2px;
+}
+
+.google-text {
+  color: #3c4043;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  font-style: normal !important;
+}

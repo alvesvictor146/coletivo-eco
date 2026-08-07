@@ -61,13 +61,14 @@ const Packages = () => {
               <div className={`package-image ${index % 2 === 0 ? 'organic-shape-1' : 'organic-shape-2'}`}>
                 <img src={pkg.image} alt={pkg.title} />
                 <div className="package-tag">{pkg.days}</div>
+                <div className="urgency-tag">Julho: Últimas Vagas</div>
               </div>
               <div className="package-content">
                 <h3>{pkg.title}</h3>
                 <p>{pkg.desc}</p>
                 <div className="package-footer">
                   <span className="price">A partir de <strong>{pkg.price}</strong></span>
-                  <a href="#orcamento" className="btn-primary" style={{ padding: '10px 20px', fontSize: '0.9rem' }}>Saiba mais</a>
+                  <a href={`https://wa.me/5511953823911?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20pacote%20para%20${pkg.title}.`} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ padding: '10px 20px', fontSize: '0.9rem' }}>Quero receber o roteiro</a>
                 </div>
               </div>
             </div>

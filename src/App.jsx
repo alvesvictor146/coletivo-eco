@@ -1,10 +1,12 @@
 import React from 'react'
 import Header from './components/Header'
 import Hero from './components/Hero'
+import Testimonials from './components/Testimonials'
+import WhyUs from './components/WhyUs'
 import Experiences from './components/Experiences'
 import Packages from './components/Packages'
 import Gallery from './components/Gallery'
-import Testimonials from './components/Testimonials'
+import FAQ from './components/FAQ'
 import Footer from './components/Footer'
 
 function App() {
@@ -13,10 +15,12 @@ function App() {
       <Header />
       <main>
         <Hero />
+        <Testimonials />
+        <WhyUs />
         <Experiences />
         <Packages />
         <Gallery />
-        <Testimonials />
+        <FAQ />
       </main>
       <Footer />
     </div>

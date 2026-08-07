@@ -19,13 +19,14 @@ const Header = () => {
           <img src="images/logo.png" alt="Coletivo Eco Logo" className="logo" />
         </a>
         <nav className="nav-links">
-          <a href="#experiencias">Experiências</a>
+          <a href="#depoimentos">Depoimentos</a>
+          <a href="#por-que-nos">Diferenciais</a>
           <a href="#pacotes">Pacotes</a>
           <a href="#galeria">Galeria</a>
-          <a href="#depoimentos">Depoimentos</a>
+          <a href="#faq">Dúvidas</a>
         </nav>
         <div className="cta-container">
-          <a href="#orcamento" className="btn-primary" style={{ padding: '12px 24px', fontSize: '1rem' }}>Fale Conosco</a>
+          <a href="https://wa.me/5511953823911?text=Olá!%20Gostaria%20de%20falar%20com%20um%20especialista." target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ padding: '12px 24px', fontSize: '1rem' }}>Fale Conosco</a>
         </div>
       </div>
     </header>
