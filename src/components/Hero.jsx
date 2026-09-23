@@ -1,17 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { FaArrowRight } from 'react-icons/fa';
+import React, { useEffect, useState } from 'react';
 import './Hero.css';
-
-const videos = [
-  'videos/hero-video-1.mp4',
-  'videos/hero-video-2.mp4',
-  'videos/hero-video-3.mp4'
-];
 
 const Hero = () => {
   const [offsetY, setOffsetY] = useState(0);
-  const [currentVideo, setCurrentVideo] = useState(0);
-  const videoRefs = useRef([]);
 
   const handleScroll = () => {
     setOffsetY(window.scrollY);
@@ -22,35 +13,19 @@ const Hero = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    const activeVideo = videoRefs.current[currentVideo];
-    if (activeVideo) {
-      activeVideo.currentTime = 0;
-      activeVideo.play().catch(e => console.log("Autoplay prevented", e));
-    }
-  }, [currentVideo]);
-
-  const handleVideoEnd = () => {
-    setCurrentVideo((prev) => (prev + 1) % videos.length);
-  };
+  const heroImage = `${import.meta.env.BASE_URL}images/hero-photo.jpeg`;
 
   return (
     <section className="hero-section">
       <div 
         className="hero-background"
-        style={{ transform: `translateY(${offsetY * 0.5}px)` }}
+        style={{ transform: `translateY(${offsetY * 0.4}px)` }}
       >
-        {videos.map((vid, idx) => (
-          <video 
-            key={idx}
-            ref={el => videoRefs.current[idx] = el}
-            className={`hero-video ${idx === currentVideo ? 'active' : ''}`}
-            src={vid} 
-            muted 
-            playsInline 
-            onEnded={handleVideoEnd}
-          />
-        ))}
+        <img 
+          src={heroImage} 
+          alt="Onça-pintada na beira do rio" 
+          className="hero-image"
+        />
         <div className="hero-overlay"></div>
       </div>
       

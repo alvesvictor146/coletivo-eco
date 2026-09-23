@@ -22,12 +22,24 @@
   align-items: center;
 }
 
+.logo-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
 .logo {
   height: 80px;
   transition: all 0.3s ease;
   background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%);
   border-radius: 50%;
   padding: 5px;
+  display: block;
 }
 
 .header.scrolled .logo {

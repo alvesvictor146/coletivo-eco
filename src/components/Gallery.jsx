@@ -3,17 +3,17 @@ import './Gallery.css';
 
 const galleryData = [
   {
-    video: "videos/gallery-video-1.mp4",
+    video: `${import.meta.env.BASE_URL}videos/IMG_6702.mp4`,
     title: "Cachoeiras de Nobres",
     desc: "Águas cristalinas ideais para relaxamento e mergulho."
   },
   {
-    video: "videos/gallery-video-2.mp4",
+    video: `${import.meta.env.BASE_URL}videos/IMG_6703.mp4`,
     title: "Chapada dos Guimarães",
     desc: "Vistas deslumbrantes para os gigantes paredões de arenito."
   },
   {
-    video: "videos/gallery-video-3.mp4",
+    video: `${import.meta.env.BASE_URL}videos/IMG_6707.mp4`,
     title: "Pantanal Norte",
     desc: "A maior planície alagada do mundo, cheia de vida silvestre."
   }
