@@ -1,0 +1,39 @@
+================================================================================
+GUIA RÁPIDO DE INSTALAÇÃO DO SITE - COLETIVO ECO
+================================================================================
+
+Prezado cliente,
+
+Este pacote contém todos os arquivos prontos e otimizados para colocar seu site no ar
+em qualquer serviço de hospedagem (HostGator, Locaweb, cPanel, Hostinger, KingHost, etc.).
+
+--------------------------------------------------------------------------------
+PASSO A PASSO PARA PUBLICAR:
+--------------------------------------------------------------------------------
+
+1. Acesse o painel da sua hospedagem (ex: cPanel) e abra o "Gerenciador de Arquivos".
+
+2. Navegue até a pasta pública principal do seu domínio:
+   - Geralmente se chama "public_html" ou "www".
+
+3. Faça o upload do arquivo "site-pronto-para-hospedagem.zip" para dentro de "public_html".
+
+4. Clique com o botão direito no arquivo enviado e selecione "Extrair" (ou "Extract").
+   - IMPORTANTE: Os arquivos (index.html, .htaccess, pasta assets, etc.) devem ficar
+     diretamente na raiz de "public_html", e NÃO dentro de uma subpasta.
+
+5. Pronto! O seu site já estará no ar acessando o seu domínio (ex: www.seusite.com.br).
+
+--------------------------------------------------------------------------------
+COMO ACESSAR O PAINEL DE CONTROLE / ADMIN:
+--------------------------------------------------------------------------------
+
+- Acesse pelo link: https://seusite.com.br/#/admin
+- Ou no próprio site, mantenha o clique pressionado no logotipo do topo por 5 segundos.
+- Senha inicial padrão: admin123
+  (Você pode alterar a senha a qualquer momento diretamente dentro do painel).
+
+--------------------------------------------------------------------------------
+DÚVIDAS OU SUPORTE?
+Entre em contato caso precise de algum apoio técnico na publicação.
+================================================================================

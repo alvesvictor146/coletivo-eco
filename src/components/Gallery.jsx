@@ -4,18 +4,18 @@ import './Gallery.css';
 const galleryData = [
   {
     video: `${import.meta.env.BASE_URL}videos/IMG_6702.mp4`,
-    title: "Cachoeiras de Nobres",
-    desc: "Águas cristalinas ideais para relaxamento e mergulho."
+    title: "Chapada dos Guimarães",
+    desc: "Vistas deslumbrantes para os gigantes paredões de arenito e cachoeiras."
   },
   {
     video: `${import.meta.env.BASE_URL}videos/IMG_6703.mp4`,
-    title: "Chapada dos Guimarães",
-    desc: "Vistas deslumbrantes para os gigantes paredões de arenito."
+    title: "Pantanal",
+    desc: "A maior planície alagada do mundo, cheia de vida silvestre."
   },
   {
     video: `${import.meta.env.BASE_URL}videos/IMG_6707.mp4`,
-    title: "Pantanal Norte",
-    desc: "A maior planície alagada do mundo, cheia de vida silvestre."
+    title: "Nobres",
+    desc: "Águas cristalinas ideais para relaxamento e flutuação."
   }
 ];
 

@@ -6,6 +6,14 @@ import {
   deleteDeparture
 } from '../services/departuresService';
 import {
+  subscribePackages,
+  createPackage,
+  updatePackage,
+  deletePackage,
+  uploadPackageImage,
+  compressImage
+} from '../services/packagesService';
+import {
   FaPlus,
   FaEdit,
   FaTrash,
@@ -18,7 +26,10 @@ import {
   FaTimes,
   FaWhatsapp,
   FaCloud,
-  FaCheckCircle
+  FaCheckCircle,
+  FaSuitcase,
+  FaUpload,
+  FaSpinner
 } from 'react-icons/fa';
 import './AdminPanel.css';
 
@@ -31,17 +42,21 @@ const PRESET_COLORS = [
 ];
 
 const AdminPanel = ({ onLogout, onGoToSite }) => {
-  const [departures, setDepartures] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // Navigation tabs: 'departures' | 'packages'
+  const [activeTab, setActiveTab] = useState('departures');
+
+  // Shared state
   const [syncStatus, setSyncStatus] = useState('conectando'); // 'conectado' | 'local'
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState(null);
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
   const [newPassword, setNewPassword] = useState('');
 
-  // Form state
-  const [formData, setFormData] = useState({
+  // Departures state
+  const [departures, setDepartures] = useState([]);
+  const [loadingDepartures, setLoadingDepartures] = useState(true);
+  const [departureModalOpen, setDepartureModalOpen] = useState(false);
+  const [editingDepartureId, setEditingDepartureId] = useState(null);
+  const [departureFormData, setDepartureFormData] = useState({
     title: '',
     dates: '',
     spotsText: 'Restam apenas 4 vagas',
@@ -52,6 +67,32 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
     order: 1
   });
 
+  // Packages state
+  const [packages, setPackages] = useState([]);
+  const [loadingPackages, setLoadingPackages] = useState(true);
+  const [packageModalOpen, setPackageModalOpen] = useState(false);
+  const [editingPackageId, setEditingPackageId] = useState(null);
+  const [packageFormData, setPackageFormData] = useState({
+    title: '',
+    desc: '',
+    days: '4 Dias',
+    price: 'R$ 1.890',
+    image: '',
+    order: 1,
+    link: ''
+  });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [isSubmittingPackage, setIsSubmittingPackage] = useState(false);
+  const [submittingStepText, setSubmittingStepText] = useState('');
+  const [deleteConfirmModal, setDeleteConfirmModal] = useState({
+    isOpen: false,
+    type: null,
+    id: null,
+    title: '',
+    isDeleting: false
+  });
+
   const showToast = (message, type = 'success') => {
     setToast({ show: true, message, type });
     setTimeout(() => {
@@ -59,12 +100,12 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
     }, 4000);
   };
 
-  // Carregar passeios em tempo real com fallback automático
+  // Carregar saídas em tempo real
   useEffect(() => {
     const unsubscribe = subscribeDepartures(
       (list, meta) => {
         setDepartures(list);
-        setLoading(false);
+        setLoadingDepartures(false);
         if (meta?.source === 'firestore') {
           setSyncStatus('conectado');
         } else {
@@ -72,7 +113,7 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
         }
       },
       (err) => {
-        console.warn('Aviso de conexão do Firestore:', err);
+        console.warn('Aviso de conexão do Firestore (saídas):', err);
         setSyncStatus('local');
       }
     );
@@ -80,10 +121,26 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
     return () => unsubscribe();
   }, []);
 
-  const openCreateModal = () => {
-    setEditingId(null);
+  // Carregar pacotes em tempo real
+  useEffect(() => {
+    const unsubscribe = subscribePackages(
+      (list) => {
+        setPackages(list);
+        setLoadingPackages(false);
+      },
+      (err) => {
+        console.warn('Aviso de conexão do Firestore (pacotes):', err);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  // Handlers para Próximas Saídas
+  const openCreateDepartureModal = () => {
+    setEditingDepartureId(null);
     const nextOrder = departures.length > 0 ? Math.max(...departures.map((d) => Number(d.order) || 0)) + 1 : 1;
-    setFormData({
+    setDepartureFormData({
       title: '',
       dates: '',
       spotsText: 'Restam apenas 4 vagas',
@@ -93,12 +150,12 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
       link: '',
       order: nextOrder
     });
-    setModalOpen(true);
+    setDepartureModalOpen(true);
   };
 
-  const openEditModal = (item) => {
-    setEditingId(item.id);
-    setFormData({
+  const openEditDepartureModal = (item) => {
+    setEditingDepartureId(item.id);
+    setDepartureFormData({
       title: item.title || '',
       dates: item.dates || '',
       spotsText: item.spotsText || '',
@@ -108,57 +165,53 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
       link: item.link || '',
       order: item.order !== undefined ? Number(item.order) : 1
     });
-    setModalOpen(true);
+    setDepartureModalOpen(true);
   };
 
-  const handleGenerateLink = (destinationTitle, dates) => {
+  const handleGenerateDepartureLink = (destinationTitle, dates) => {
     const text = encodeURIComponent(
       `Olá! Gostaria de garantir minha vaga para o passeio: ${destinationTitle || 'Passeio'} (${dates || 'data a combinar'}).`
     );
-    return `https://wa.me/5511953823911?text=${text}`;
+    return `https://wa.me/5511961781661?text=${text}`;
   };
 
-  const handleSubmit = async (e) => {
+  const handleDepartureSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.title.trim() || !formData.dates.trim()) {
+    if (!departureFormData.title.trim() || !departureFormData.dates.trim()) {
       showToast('Por favor, informe ao menos o nome do destino e as datas.', 'error');
       return;
     }
 
-    let finalLink = formData.link.trim();
+    let finalLink = departureFormData.link.trim();
     if (!finalLink) {
-      finalLink = handleGenerateLink(formData.title, formData.dates);
+      finalLink = handleGenerateDepartureLink(departureFormData.title, departureFormData.dates);
     }
 
     const payload = {
-      title: formData.title.trim(),
-      dates: formData.dates.trim(),
-      spotsText: formData.spotsText.trim(),
-      statusText: formData.statusText.trim(),
-      statusColor: formData.statusColor,
-      isUrgent: Boolean(formData.isUrgent),
+      title: departureFormData.title.trim(),
+      dates: departureFormData.dates.trim(),
+      spotsText: departureFormData.spotsText.trim(),
+      statusText: departureFormData.statusText.trim(),
+      statusColor: departureFormData.statusColor,
+      isUrgent: Boolean(departureFormData.isUrgent),
       link: finalLink,
-      order: Number(formData.order) || 1
+      order: Number(departureFormData.order) || 1
     };
 
     try {
-      if (editingId) {
-        // Atualizar
-        await updateDeparture(editingId, payload);
-        // Atualização otimista imediata na UI
+      if (editingDepartureId) {
+        await updateDeparture(editingDepartureId, payload);
         setDepartures((prev) =>
           prev
-            .map((item) => (item.id === editingId ? { ...item, ...payload } : item))
+            .map((item) => (item.id === editingDepartureId ? { ...item, ...payload } : item))
             .sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0))
         );
         showToast('Passeio atualizado com sucesso!');
       } else {
-        // Criar novo
         const result = await createDeparture({
           ...payload,
           createdAt: new Date().toISOString()
         });
-        // Inserção otimista imediata na UI
         setDepartures((prev) =>
           [...prev, result.item].sort(
             (a, b) => (Number(a.order) || 0) - (Number(b.order) || 0)
@@ -166,24 +219,213 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
         );
         showToast('Novo passeio cadastrado com sucesso!');
       }
-      setModalOpen(false);
+      setDepartureModalOpen(false);
     } catch (err) {
       console.error('Erro ao salvar passeio:', err);
       showToast('Erro ao salvar alterações.', 'error');
     }
   };
 
-  const handleDelete = async (id, title) => {
-    if (window.confirm(`Tem certeza que deseja excluir o passeio "${title}"?`)) {
-      try {
+  // DT-03: Solicitar confirmação nativa para excluir saída
+  const requestDeleteDeparture = (id, title) => {
+    setDeleteConfirmModal({
+      isOpen: true,
+      type: 'departure',
+      id,
+      title,
+      isDeleting: false
+    });
+  };
+
+  // DT-03: Solicitar confirmação nativa para excluir pacote
+  const requestDeletePackage = (id, title) => {
+    setDeleteConfirmModal({
+      isOpen: true,
+      type: 'package',
+      id,
+      title,
+      isDeleting: false
+    });
+  };
+
+  // DT-03: Executar exclusão após confirmação no modal
+  const handleConfirmDelete = async () => {
+    const { type, id, title } = deleteConfirmModal;
+    if (!id || !type) return;
+
+    setDeleteConfirmModal((prev) => ({ ...prev, isDeleting: true }));
+
+    try {
+      if (type === 'departure') {
         await deleteDeparture(id);
-        // Remoção otimista imediata na UI
         setDepartures((prev) => prev.filter((item) => item.id !== id));
         showToast(`Passeio "${title}" excluído com sucesso!`);
-      } catch (err) {
-        console.error('Erro ao excluir:', err);
-        showToast('Erro ao excluir o passeio.', 'error');
+      } else if (type === 'package') {
+        await deletePackage(id);
+        setPackages((prev) => prev.filter((item) => item.id !== id));
+        showToast(`Pacote "${title}" excluído com sucesso!`);
       }
+    } catch (err) {
+      console.error(`Erro ao excluir ${type}:`, err);
+      showToast('Erro ao excluir o item.', 'error');
+    } finally {
+      setDeleteConfirmModal({
+        isOpen: false,
+        type: null,
+        id: null,
+        title: '',
+        isDeleting: false
+      });
+    }
+  };
+
+  // Handlers para Pacotes Exclusivos
+  const openCreatePackageModal = () => {
+    setEditingPackageId(null);
+    setImageFile(null);
+    setImagePreview('');
+    const nextOrder = packages.length > 0 ? Math.max(...packages.map((p) => Number(p.order) || 0)) + 1 : 1;
+    setPackageFormData({
+      title: '',
+      desc: '',
+      days: '4 Dias',
+      price: 'R$ 1.890',
+      image: 'images/chapada_guimaraes_1783969294083.png',
+      order: nextOrder,
+      link: ''
+    });
+    setPackageModalOpen(true);
+  };
+
+  const openEditPackageModal = (item) => {
+    setEditingPackageId(item.id);
+    setImageFile(null);
+    setImagePreview(item.image || '');
+    setPackageFormData({
+      title: item.title || '',
+      desc: item.desc || '',
+      days: item.days || '4 Dias',
+      price: item.price || 'R$ 1.890',
+      image: item.image || '',
+      order: item.order !== undefined ? Number(item.order) : 1,
+      link: item.link || ''
+    });
+    setPackageModalOpen(true);
+  };
+
+  const handleGeneratePackageLink = (title) => {
+    const text = encodeURIComponent(`Olá! Gostaria de saber mais sobre o pacote para ${title || 'Mato Grosso'}.`);
+    return `https://wa.me/5511961781661?text=${text}`;
+  };
+
+  // DT-02: Validação estrita de tipo (MIME) e tamanho (máx. 10MB)
+  const handleImageFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!ALLOWED_TYPES.includes(file.type.toLowerCase())) {
+      showToast('Formato não suportado. Utilize imagens JPG, PNG ou WEBP.', 'error');
+      e.target.value = '';
+      return;
+    }
+
+    const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+    if (file.size > MAX_SIZE) {
+      showToast('A imagem excede o tamanho máximo de 10MB.', 'error');
+      e.target.value = '';
+      return;
+    }
+
+    setImageFile(file);
+    try {
+      const compressed = await compressImage(file);
+      setImagePreview(compressed);
+    } catch {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setImagePreview(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // DT-08: Permitir desmarcar o arquivo selecionado
+  const handleClearImageFile = () => {
+    setImageFile(null);
+    setImagePreview(packageFormData.image || '');
+    const fileInput = document.getElementById('pkg-file-upload');
+    if (fileInput) fileInput.value = '';
+  };
+
+  const handlePackageSubmit = async (e) => {
+    e.preventDefault();
+    if (!packageFormData.title.trim()) {
+      showToast('Por favor, informe o título do pacote.', 'error');
+      return;
+    }
+
+    setIsSubmittingPackage(true);
+
+    try {
+      let finalImageUrl = packageFormData.image;
+
+      // Se o usuário selecionou uma nova imagem pelo input de arquivo
+      if (imageFile) {
+        setSubmittingStepText('Enviando e otimizando imagem...');
+        try {
+          finalImageUrl = await uploadPackageImage(imageFile);
+        } catch (uploadErr) {
+          console.warn('Erro no upload de imagem:', uploadErr);
+          showToast('Aviso: Falha no upload para nuvem, mantendo imagem anterior.', 'error');
+        }
+      }
+
+      setSubmittingStepText('Salvando pacote...');
+
+      let finalLink = packageFormData.link.trim();
+      if (!finalLink) {
+        finalLink = handleGeneratePackageLink(packageFormData.title);
+      }
+
+      const payload = {
+        title: packageFormData.title.trim(),
+        desc: packageFormData.desc.trim(),
+        days: packageFormData.days.trim(),
+        price: packageFormData.price.trim(),
+        image: finalImageUrl,
+        order: Number(packageFormData.order) || 1,
+        link: finalLink
+      };
+
+      if (editingPackageId) {
+        // Atualização imediata na interface
+        setPackages((prev) =>
+          prev
+            .map((item) => (item.id === editingPackageId ? { ...item, ...payload } : item))
+            .sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0))
+        );
+        await updatePackage(editingPackageId, payload);
+        showToast('Pacote atualizado com sucesso!');
+      } else {
+        const result = await createPackage({
+          ...payload,
+          createdAt: new Date().toISOString()
+        });
+        setPackages((prev) =>
+          [...prev, result.item].sort(
+            (a, b) => (Number(a.order) || 0) - (Number(b.order) || 0)
+          )
+        );
+        showToast('Novo pacote cadastrado com sucesso!');
+      }
+      setPackageModalOpen(false);
+    } catch (err) {
+      console.error('Erro ao salvar pacote:', err);
+      showToast('Erro ao salvar alterações no pacote.', 'error');
+    } finally {
+      setIsSubmittingPackage(false);
+      setSubmittingStepText('');
     }
   };
 
@@ -287,104 +529,203 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
           </div>
         )}
 
-        <div className="admin-header-row">
-          <div>
-            <h1>Gerenciamento de Próximas Saídas</h1>
-            <p>Edite datas, nomes de destinos, vagas e status dos passeios exibidos no site.</p>
-          </div>
+        {/* Navigation Tabs */}
+        <div className="admin-tabs-nav">
           <button
             type="button"
-            className="btn-admin-action btn-admin-success"
-            onClick={openCreateModal}
+            className={`admin-tab-btn ${activeTab === 'departures' ? 'active' : ''}`}
+            onClick={() => setActiveTab('departures')}
           >
-            <FaPlus /> Adicionar Novo Passeio
+            <FaCalendarAlt /> Próximas Saídas ({departures.length})
+          </button>
+          <button
+            type="button"
+            className={`admin-tab-btn ${activeTab === 'packages' ? 'active' : ''}`}
+            onClick={() => setActiveTab('packages')}
+          >
+            <FaSuitcase /> Pacotes Exclusivos ({packages.length})
           </button>
         </div>
 
-        {loading ? (
-          <div className="empty-state">
-            <h3>Carregando saídas...</h3>
-            <p>Aguarde um instante.</p>
-          </div>
-        ) : departures.length === 0 ? (
-          <div className="empty-state">
-            <h3>Nenhum passeio cadastrado</h3>
-            <p>Clique no botão acima para adicionar a primeira saída para os clientes!</p>
-          </div>
-        ) : (
-          <div className="departures-admin-grid">
-            {departures.map((item, index) => (
-              <div key={item.id} className="departure-admin-card">
-                <div className="card-top-status">
-                  <span className="badge-order">Posição #{item.order || index + 1}</span>
-                  <div className={`admin-badge-status ${item.isUrgent ? 'urgent' : ''}`}>
-                    <FaCircle style={{ color: item.statusColor || '#10B981', fontSize: '0.65rem' }} />
-                    <span>{item.statusText || 'Confirmado'}</span>
-                  </div>
-                </div>
-
-                <div className="card-main-info">
-                  <h3>{item.title}</h3>
-                  <div className="card-dates-row">
-                    <FaCalendarAlt style={{ color: '#10b981' }} />
-                    <span>{item.dates}</span>
-                  </div>
-
-                  <div className="card-badges-row">
-                    <span className="admin-badge-spots">{item.spotsText}</span>
-                    {item.isUrgent && (
-                      <span className="admin-badge-spots" style={{ background: '#fee2e2', color: '#b91c1c' }}>
-                        Alerta de Urgência Ativo
-                      </span>
-                    )}
-                  </div>
-
-                  {item.link && (
-                    <small className="card-link-preview">
-                      <FaWhatsapp style={{ color: '#25D366', marginRight: '4px' }} />
-                      Link WhatsApp configurado
-                    </small>
-                  )}
-                </div>
-
-                <div className="card-actions-bar">
-                  <button
-                    type="button"
-                    className="btn-card-edit"
-                    onClick={() => openEditModal(item)}
-                  >
-                    <FaEdit /> Editar
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-card-delete"
-                    onClick={() => handleDelete(item.id, item.title)}
-                  >
-                    <FaTrash /> Excluir
-                  </button>
-                </div>
+        {/* TAB 1: PRÓXIMAS SAÍDAS */}
+        {activeTab === 'departures' && (
+          <div>
+            <div className="admin-header-row">
+              <div>
+                <h1>Gerenciamento de Próximas Saídas</h1>
+                <p>Edite datas, nomes de destinos, vagas e status dos passeios exibidos no site.</p>
               </div>
-            ))}
+              <button
+                type="button"
+                className="btn-admin-action btn-admin-success"
+                onClick={openCreateDepartureModal}
+              >
+                <FaPlus /> Adicionar Novo Passeio
+              </button>
+            </div>
+
+            {loadingDepartures ? (
+              <div className="empty-state">
+                <h3>Carregando saídas...</h3>
+                <p>Aguarde um instante.</p>
+              </div>
+            ) : departures.length === 0 ? (
+              <div className="empty-state">
+                <h3>Nenhum passeio cadastrado</h3>
+                <p>Clique no botão acima para adicionar a primeira saída para os clientes!</p>
+              </div>
+            ) : (
+              <div className="departures-admin-grid">
+                {departures.map((item, index) => (
+                  <div key={item.id} className="departure-admin-card">
+                    <div className="card-top-status">
+                      <span className="badge-order">Posição #{item.order || index + 1}</span>
+                      <div className={`admin-badge-status ${item.isUrgent ? 'urgent' : ''}`}>
+                        <FaCircle style={{ color: item.statusColor || '#10B981', fontSize: '0.65rem' }} />
+                        <span>{item.statusText || 'Confirmado'}</span>
+                      </div>
+                    </div>
+
+                    <div className="card-main-info">
+                      <h3>{item.title}</h3>
+                      <div className="card-dates-row">
+                        <FaCalendarAlt style={{ color: '#10b981' }} />
+                        <span>{item.dates}</span>
+                      </div>
+
+                      <div className="card-badges-row">
+                        <span className="admin-badge-spots">{item.spotsText}</span>
+                        {item.isUrgent && (
+                          <span className="admin-badge-spots" style={{ background: '#fee2e2', color: '#b91c1c' }}>
+                            Alerta de Urgência Ativo
+                          </span>
+                        )}
+                      </div>
+
+                      {item.link && (
+                        <small className="card-link-preview">
+                          <FaWhatsapp style={{ color: '#25D366', marginRight: '4px' }} />
+                          Link WhatsApp configurado
+                        </small>
+                      )}
+                    </div>
+
+                    <div className="card-actions-bar">
+                      <button
+                        type="button"
+                        className="btn-card-edit"
+                        onClick={() => openEditDepartureModal(item)}
+                      >
+                        <FaEdit /> Editar
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-card-delete"
+                        onClick={() => requestDeleteDeparture(item.id, item.title)}
+                      >
+                        <FaTrash /> Excluir
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 2: PACOTES EXCLUSIVOS */}
+        {activeTab === 'packages' && (
+          <div>
+            <div className="admin-header-row">
+              <div>
+                <h1>Gerenciamento de Pacotes Exclusivos</h1>
+                <p>Edite fotos, textos, durações, preços e links de WhatsApp de cada pacote.</p>
+              </div>
+              <button
+                type="button"
+                className="btn-admin-action btn-admin-success"
+                onClick={openCreatePackageModal}
+              >
+                <FaPlus /> Adicionar Novo Pacote
+              </button>
+            </div>
+
+            {loadingPackages ? (
+              <div className="empty-state">
+                <h3>Carregando pacotes...</h3>
+                <p>Aguarde um instante.</p>
+              </div>
+            ) : packages.length === 0 ? (
+              <div className="empty-state">
+                <h3>Nenhum pacote cadastrado</h3>
+                <p>Clique no botão acima para adicionar o primeiro pacote exclusivo!</p>
+              </div>
+            ) : (
+              <div className="packages-admin-grid">
+                {packages.map((pkg, index) => (
+                  <div key={pkg.id || index} className="package-admin-card">
+                    <div className="package-card-img-wrapper">
+                      <img src={pkg.image} alt={pkg.title} />
+                      <span className="package-badge-order">Posição #{pkg.order || index + 1}</span>
+                    </div>
+
+                    <div className="package-admin-info">
+                      <div className="package-meta-row">
+                        <span className="package-days-badge">{pkg.days}</span>
+                        <span className="package-price-tag">A partir de <strong>{pkg.price}</strong></span>
+                      </div>
+
+                      <h3>{pkg.title}</h3>
+                      <p className="package-desc-snippet">{pkg.desc}</p>
+
+                      {pkg.link && (
+                        <small className="card-link-preview">
+                          <FaWhatsapp style={{ color: '#25D366', marginRight: '4px' }} />
+                          WhatsApp configurado
+                        </small>
+                      )}
+                    </div>
+
+                    <div className="card-actions-bar">
+                      <button
+                        type="button"
+                        className="btn-card-edit"
+                        onClick={() => openEditPackageModal(pkg)}
+                      >
+                        <FaEdit /> Editar
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-card-delete"
+                        onClick={() => requestDeletePackage(pkg.id, pkg.title)}
+                      >
+                        <FaTrash /> Excluir
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </main>
 
-      {/* Modal Adicionar / Editar */}
-      {modalOpen && (
-        <div className="admin-modal-backdrop" onClick={() => setModalOpen(false)}>
+      {/* Modal Adicionar / Editar Saída */}
+      {departureModalOpen && (
+        <div className="admin-modal-backdrop" onClick={() => setDepartureModalOpen(false)}>
           <div className="admin-modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal-header">
-              <h2>{editingId ? 'Editar Passeio' : 'Novo Passeio'}</h2>
+              <h2>{editingDepartureId ? 'Editar Passeio' : 'Novo Passeio'}</h2>
               <button
                 type="button"
                 className="modal-close-btn"
-                onClick={() => setModalOpen(false)}
+                onClick={() => setDepartureModalOpen(false)}
               >
                 <FaTimes />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleDepartureSubmit}>
               <div className="admin-modal-body">
                 <div className="form-group-admin">
                   <label htmlFor="dep-title">Nome do Destino / Título *</label>
@@ -393,8 +734,8 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                     type="text"
                     required
                     placeholder="Ex: Chapada dos Guimarães"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    value={departureFormData.title}
+                    onChange={(e) => setDepartureFormData({ ...departureFormData, title: e.target.value })}
                   />
                 </div>
 
@@ -406,8 +747,8 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                       type="text"
                       required
                       placeholder="Ex: 15 a 18 de Julho"
-                      value={formData.dates}
-                      onChange={(e) => setFormData({ ...formData, dates: e.target.value })}
+                      value={departureFormData.dates}
+                      onChange={(e) => setDepartureFormData({ ...departureFormData, dates: e.target.value })}
                     />
                   </div>
 
@@ -417,8 +758,8 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                       id="dep-spots"
                       type="text"
                       placeholder="Ex: Restam apenas 4 vagas"
-                      value={formData.spotsText}
-                      onChange={(e) => setFormData({ ...formData, spotsText: e.target.value })}
+                      value={departureFormData.spotsText}
+                      onChange={(e) => setDepartureFormData({ ...departureFormData, spotsText: e.target.value })}
                     />
                   </div>
                 </div>
@@ -430,8 +771,8 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                       id="dep-status"
                       type="text"
                       placeholder="Ex: Confirmado ou Últimas vagas!"
-                      value={formData.statusText}
-                      onChange={(e) => setFormData({ ...formData, statusText: e.target.value })}
+                      value={departureFormData.statusText}
+                      onChange={(e) => setDepartureFormData({ ...departureFormData, statusText: e.target.value })}
                     />
                   </div>
 
@@ -441,8 +782,8 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                       id="dep-order"
                       type="number"
                       min="1"
-                      value={formData.order}
-                      onChange={(e) => setFormData({ ...formData, order: e.target.value })}
+                      value={departureFormData.order}
+                      onChange={(e) => setDepartureFormData({ ...departureFormData, order: e.target.value })}
                     />
                   </div>
                 </div>
@@ -452,14 +793,14 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                   <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                     <input
                       type="color"
-                      value={formData.statusColor}
-                      onChange={(e) => setFormData({ ...formData, statusColor: e.target.value })}
+                      value={departureFormData.statusColor}
+                      onChange={(e) => setDepartureFormData({ ...departureFormData, statusColor: e.target.value })}
                       style={{ width: '48px', height: '38px', padding: 0, border: 'none', cursor: 'pointer', borderRadius: '6px' }}
                     />
                     <input
                       type="text"
-                      value={formData.statusColor}
-                      onChange={(e) => setFormData({ ...formData, statusColor: e.target.value })}
+                      value={departureFormData.statusColor}
+                      onChange={(e) => setDepartureFormData({ ...departureFormData, statusColor: e.target.value })}
                       placeholder="#10B981"
                       style={{ maxWidth: '120px' }}
                     />
@@ -473,7 +814,7 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                         className="color-circle-btn"
                         style={{ backgroundColor: c.value }}
                         title={c.name}
-                        onClick={() => setFormData({ ...formData, statusColor: c.value })}
+                        onClick={() => setDepartureFormData({ ...departureFormData, statusColor: c.value })}
                       />
                     ))}
                   </div>
@@ -483,8 +824,8 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                   <label className="checkbox-label">
                     <input
                       type="checkbox"
-                      checked={formData.isUrgent}
-                      onChange={(e) => setFormData({ ...formData, isUrgent: e.target.checked })}
+                      checked={departureFormData.isUrgent}
+                      onChange={(e) => setDepartureFormData({ ...departureFormData, isUrgent: e.target.checked })}
                     />
                     <span>Destacar com alerta de urgência (ponto pulsante vermelho)</span>
                   </label>
@@ -497,8 +838,8 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                       type="button"
                       style={{ background: 'none', border: 'none', color: '#10b981', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600 }}
                       onClick={() => {
-                        const link = handleGenerateLink(formData.title, formData.dates);
-                        setFormData({ ...formData, link });
+                        const link = handleGenerateDepartureLink(departureFormData.title, departureFormData.dates);
+                        setDepartureFormData({ ...departureFormData, link });
                       }}
                     >
                       Gerar Link Automático
@@ -507,9 +848,9 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                   <input
                     id="dep-link"
                     type="text"
-                    placeholder="https://wa.me/5511953823911?text=..."
-                    value={formData.link}
-                    onChange={(e) => setFormData({ ...formData, link: e.target.value })}
+                    placeholder="https://wa.me/5511961781661?text=..."
+                    value={departureFormData.link}
+                    onChange={(e) => setDepartureFormData({ ...departureFormData, link: e.target.value })}
                   />
                   <small style={{ color: '#64748b' }}>
                     Se deixar em branco, um link com o nome e data será gerado automaticamente.
@@ -522,12 +863,217 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                   type="button"
                   className="btn-admin-action btn-admin-secondary"
                   style={{ color: '#334155', borderColor: '#cbd5e1' }}
-                  onClick={() => setModalOpen(false)}
+                  onClick={() => setDepartureModalOpen(false)}
                 >
                   Cancelar
                 </button>
                 <button type="submit" className="btn-admin-action btn-admin-success">
-                  <FaCheck /> {editingId ? 'Salvar Alterações' : 'Cadastrar Saída'}
+                  <FaCheck /> {editingDepartureId ? 'Salvar Alterações' : 'Cadastrar Saída'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Adicionar / Editar Pacote */}
+      {packageModalOpen && (
+        <div className="admin-modal-backdrop" onClick={() => setPackageModalOpen(false)}>
+          <div className="admin-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="admin-modal-header">
+              <h2>{editingPackageId ? 'Editar Pacote Exclusivo' : 'Novo Pacote Exclusivo'}</h2>
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setPackageModalOpen(false)}
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <form onSubmit={handlePackageSubmit}>
+              <div className="admin-modal-body">
+                <div className="form-group-admin">
+                  <label htmlFor="pkg-title">Título do Destino *</label>
+                  <input
+                    id="pkg-title"
+                    type="text"
+                    required
+                    placeholder="Ex: Chapada dos Guimarães"
+                    value={packageFormData.title}
+                    onChange={(e) => setPackageFormData({ ...packageFormData, title: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group-admin">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <label htmlFor="pkg-desc">Descrição do Pacote *</label>
+                    <span style={{ fontSize: '0.78rem', color: packageFormData.desc.length > 250 ? '#e63946' : '#64748b' }}>
+                      {packageFormData.desc.length} caracteres
+                    </span>
+                  </div>
+                  <textarea
+                    id="pkg-desc"
+                    rows="3"
+                    required
+                    placeholder="Descreva as principais atrações e experiências deste pacote..."
+                    value={packageFormData.desc}
+                    onChange={(e) => setPackageFormData({ ...packageFormData, desc: e.target.value })}
+                  />
+                  <small style={{ color: '#64748b' }}>
+                    Recomendado: 80 a 160 caracteres para melhor equilíbrio nos cards do site.
+                  </small>
+                </div>
+
+                <div className="form-row-2">
+                  <div className="form-group-admin">
+                    <label htmlFor="pkg-days">Duração</label>
+                    <input
+                      id="pkg-days"
+                      type="text"
+                      placeholder="Ex: 4 Dias"
+                      value={packageFormData.days}
+                      onChange={(e) => setPackageFormData({ ...packageFormData, days: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="form-group-admin">
+                    <label htmlFor="pkg-price">Preço</label>
+                    <input
+                      id="pkg-price"
+                      type="text"
+                      placeholder="Ex: R$ 1.890"
+                      value={packageFormData.price}
+                      onChange={(e) => setPackageFormData({ ...packageFormData, price: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row-2">
+                  <div className="form-group-admin">
+                    <label htmlFor="pkg-order">Ordem de Exibição</label>
+                    <input
+                      id="pkg-order"
+                      type="number"
+                      min="1"
+                      value={packageFormData.order}
+                      onChange={(e) => setPackageFormData({ ...packageFormData, order: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="form-group-admin">
+                    <label htmlFor="pkg-image-url">URL da Imagem (Externa ou Local)</label>
+                    <input
+                      id="pkg-image-url"
+                      type="text"
+                      placeholder="images/exemplo.png ou https://..."
+                      value={packageFormData.image}
+                      onChange={(e) => {
+                        setPackageFormData({ ...packageFormData, image: e.target.value });
+                        if (!imageFile) {
+                          setImagePreview(e.target.value);
+                        }
+                      }}
+                    />
+                    <small style={{ color: imageFile ? '#b45309' : '#64748b' }}>
+                      {imageFile ? '⚠️ O arquivo do computador selecionado abaixo terá prioridade.' : 'Usado caso nenhum arquivo seja enviado pelo botão abaixo.'}
+                    </small>
+                  </div>
+                </div>
+
+                {/* Upload e Preview de Imagem com DT-02 e DT-08 */}
+                <div className="form-group-admin">
+                  <label>Foto do Pacote</label>
+                  <div className="image-upload-box">
+                    <input
+                      type="file"
+                      id="pkg-file-upload"
+                      accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                      style={{ display: 'none' }}
+                      onChange={handleImageFileChange}
+                    />
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+                      <label htmlFor="pkg-file-upload" className="btn-upload-label">
+                        <FaUpload /> {imageFile ? 'Trocar Foto Selecionada' : 'Escolher Foto do Computador'}
+                      </label>
+                      {imageFile && (
+                        <button
+                          type="button"
+                          className="btn-admin-action btn-admin-secondary"
+                          style={{ padding: '8px 14px', fontSize: '0.82rem', color: '#b91c1c', borderColor: '#fca5a5', background: '#fef2f2' }}
+                          onClick={handleClearImageFile}
+                        >
+                          <FaTimes /> Desmarcar Arquivo
+                        </button>
+                      )}
+                    </div>
+                    <small style={{ color: '#64748b', display: 'block', marginTop: '8px' }}>
+                      Formatos suportados: PNG, JPG, JPEG, WEBP (máx. 10MB). Compressão automática progressiva.
+                    </small>
+                  </div>
+
+                  {imagePreview && (
+                    <div className="image-preview-wrapper">
+                      <img src={imagePreview} alt="Pré-visualização" className="image-preview-thumb" />
+                      <div className="image-preview-info">
+                        <strong>Foto {imageFile ? 'Nova (Upload Pendente)' : 'Atual do Pacote'}</strong>
+                        <span>{imageFile ? `${imageFile.name} (${(imageFile.size / 1024).toFixed(1)} KB)` : 'Imagem vinculada ao registro'}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="form-group-admin">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <label htmlFor="pkg-link">Link do WhatsApp</label>
+                    <button
+                      type="button"
+                      style={{ background: 'none', border: 'none', color: '#10b981', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600 }}
+                      onClick={() => {
+                        const link = handleGeneratePackageLink(packageFormData.title);
+                        setPackageFormData({ ...packageFormData, link });
+                      }}
+                    >
+                      Gerar Link Automático
+                    </button>
+                  </div>
+                  <input
+                    id="pkg-link"
+                    type="text"
+                    placeholder="https://wa.me/5511961781661?text=..."
+                    value={packageFormData.link}
+                    onChange={(e) => setPackageFormData({ ...packageFormData, link: e.target.value })}
+                  />
+                  <small style={{ color: '#64748b' }}>
+                    Deixe em branco para usar o link padrão com o nome do pacote.
+                  </small>
+                </div>
+              </div>
+
+              <div className="admin-modal-footer">
+                <button
+                  type="button"
+                  className="btn-admin-action btn-admin-secondary"
+                  style={{ color: '#334155', borderColor: '#cbd5e1' }}
+                  onClick={() => setPackageModalOpen(false)}
+                  disabled={isSubmittingPackage}
+                >
+                  Cancelar
+                </button>
+                <button 
+                  type="submit" 
+                  className="btn-admin-action btn-admin-success"
+                  disabled={isSubmittingPackage}
+                >
+                  {isSubmittingPackage ? (
+                    <>
+                      <FaSpinner className="spin-icon" /> {submittingStepText || 'Salvando...'}
+                    </>
+                  ) : (
+                    <>
+                      <FaCheck /> {editingPackageId ? 'Salvar Alterações' : 'Cadastrar Pacote'}
+                    </>
+                  )}
                 </button>
               </div>
             </form>
@@ -581,6 +1127,73 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* DT-03: Modal de Confirmação de Exclusão Nativo do Design System */}
+      {deleteConfirmModal.isOpen && (
+        <div
+          className="admin-modal-backdrop"
+          onClick={() =>
+            !deleteConfirmModal.isDeleting &&
+            setDeleteConfirmModal({ isOpen: false, type: null, id: null, title: '', isDeleting: false })
+          }
+        >
+          <div className="admin-modal-content" style={{ maxWidth: '440px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="admin-modal-header" style={{ borderBottomColor: 'rgba(230, 57, 70, 0.2)' }}>
+              <h2 style={{ color: '#e63946', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <FaTrash /> Confirmar Exclusão
+              </h2>
+              <button
+                type="button"
+                className="modal-close-btn"
+                disabled={deleteConfirmModal.isDeleting}
+                onClick={() =>
+                  setDeleteConfirmModal({ isOpen: false, type: null, id: null, title: '', isDeleting: false })
+                }
+              >
+                <FaTimes />
+              </button>
+            </div>
+            <div className="admin-modal-body">
+              <p style={{ color: '#334155', fontSize: '0.95rem', lineHeight: '1.5' }}>
+                Tem certeza que deseja excluir {deleteConfirmModal.type === 'package' ? 'o pacote' : 'a saída'}{' '}
+                <strong>"{deleteConfirmModal.title}"</strong>?
+              </p>
+              <p style={{ color: '#64748b', fontSize: '0.85rem', marginTop: '10px' }}>
+                Esta ação removerá o registro do site imediatamente e não poderá ser desfeita.
+              </p>
+            </div>
+            <div className="admin-modal-footer">
+              <button
+                type="button"
+                className="btn-admin-action btn-admin-secondary"
+                disabled={deleteConfirmModal.isDeleting}
+                onClick={() =>
+                  setDeleteConfirmModal({ isOpen: false, type: null, id: null, title: '', isDeleting: false })
+                }
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="btn-admin-action btn-admin-danger"
+                disabled={deleteConfirmModal.isDeleting}
+                onClick={handleConfirmDelete}
+                style={{ background: '#e63946', color: '#ffffff' }}
+              >
+                {deleteConfirmModal.isDeleting ? (
+                  <>
+                    <FaSpinner className="spin-icon" /> Excluindo...
+                  </>
+                ) : (
+                  <>
+                    <FaTrash /> Excluir Definitivamente
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

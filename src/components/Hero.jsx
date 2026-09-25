@@ -34,11 +34,10 @@ const Hero = () => {
 
       <div className="container hero-content">
         <h1 className="reveal-up delay-100">
-          A Magia da <span className="highlight">Chapada dos Guimarães</span>
+          A magia do <span className="highlight">Mato Grosso</span>
         </h1>
         <p className="reveal-up delay-200">
-          Experiências inesquecíveis em cachoeiras, rios cristalinos, trilhas e destinos 
-          exclusivos preparados para quem deseja viver a natureza com conforto e segurança.
+          Descubra experiências únicas em meio à natureza, com conforto, segurança e tudo planejado para você.
         </p>
 
         <div className="social-proof-hero reveal-up delay-300">
