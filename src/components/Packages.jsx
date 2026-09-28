@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { subscribePackages } from '../services/packagesService';
 import './Packages.css';
 
+const formatTotalPrice = (priceStr) => {
+  if (!priceStr) return 'A partir de R$ 2.099,90 | Taxas inclusas';
+  if (priceStr.toLowerCase().includes('taxas inclusas')) {
+    return priceStr;
+  }
+  const clean = priceStr.replace(/^a partir de\s*/i, '').trim();
+  const formatted = clean.startsWith('R$') ? clean : `R$ ${clean}`;
+  return `A partir de ${formatted} | Taxas inclusas`;
+};
+
 const Packages = () => {
   const [packages, setPackages] = useState([]);
 
@@ -30,18 +40,26 @@ const Packages = () => {
                 </div>
                 <div className="package-content">
                   <h3>{pkg.title}</h3>
-                  <p>{pkg.desc}</p>
-                  <div className="package-footer">
-                    <span className="price">A partir de <strong>{pkg.price}</strong></span>
+                  <div className="package-desc">{pkg.desc}</div>
+                  <div className="package-pricing-block">
+                    <span className="price-lead">a partir de</span>
+                    <span className="price-installment">
+                      {pkg.installment || '6x de R$ 349,98'}
+                    </span>
+                    <span className="price-per-person">Preço por pessoa*</span>
+
                     <a 
                       href={whatsappLink} 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="btn-primary" 
-                      style={{ padding: '10px 20px', fontSize: '0.9rem' }}
+                      className="btn-package-action"
                     >
-                      Quero receber o roteiro
+                      SAIBA MAIS
                     </a>
+
+                    <div className="price-total-note">
+                      {formatTotalPrice(pkg.price)}
+                    </div>
                   </div>
                 </div>
               </div>

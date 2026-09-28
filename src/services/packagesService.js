@@ -15,10 +15,11 @@ export const INITIAL_PACKAGES = [
   {
     id: 'pkg_1',
     title: "Chapada dos Guimarães",
-    desc: "Cachoeiras, paredões e mirantes espetaculares na savana central.",
+    desc: "✓ Organização da viagem\n✓ Transporte ida e volta\n✓ Hospedagem com café da manhã\n✓ Passeios inclusos com ingressos\n✓ Guias Cadastrados",
     image: "images/chapada_guimaraes_1783969294083.png",
     days: "4 Dias",
-    price: "R$ 1.890",
+    price: "R$ 2.099,90",
+    installment: "6x de R$ 349,98",
     order: 1,
     link: "https://wa.me/5511961781661?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20pacote%20para%20Chapada%20dos%20Guimarães."
   },
@@ -28,7 +29,8 @@ export const INITIAL_PACKAGES = [
     desc: "Flutuação em rios cristalinos repletos de peixes e grutas calcárias.",
     image: "images/nobres_flutuacao_1783969302792.png",
     days: "3 Dias",
-    price: "R$ 1.550",
+    price: "R$ 1.550,00",
+    installment: "6x de R$ 258,33",
     order: 2,
     link: "https://wa.me/5511961781661?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20pacote%20para%20Nobres."
   },
@@ -38,7 +40,8 @@ export const INITIAL_PACKAGES = [
     desc: "Safári ecológico e vivência única com a maior fauna das Américas.",
     image: "images/pantanal_jaguar_1783969312716.png",
     days: "5 Dias",
-    price: "R$ 3.200",
+    price: "R$ 3.200,00",
+    installment: "6x de R$ 533,33",
     order: 3,
     link: "https://wa.me/5511961781661?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20pacote%20para%20Pantanal."
   },
@@ -48,7 +51,8 @@ export const INITIAL_PACKAGES = [
     desc: "Águas termais, cachoeiras místicas e mistérios na Serra do Roncador.",
     image: "images/hero_drone_view_1783969284798.png",
     days: "3 Dias",
-    price: "R$ 1.350",
+    price: "R$ 1.350,00",
+    installment: "6x de R$ 225,00",
     order: 4,
     link: "https://wa.me/5511961781661?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20pacote%20para%20Barra%20do%20Garças."
   },
@@ -58,7 +62,8 @@ export const INITIAL_PACKAGES = [
     desc: "Aventura radical com rafting no Rio Tenente Amaral e cachoeiras incríveis.",
     image: "images/jaciara.png",
     days: "2 Dias",
-    price: "R$ 890",
+    price: "R$ 890,00",
+    installment: "6x de R$ 148,33",
     order: 5,
     link: "https://wa.me/5511961781661?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20pacote%20para%20Jaciara."
   },
@@ -68,7 +73,8 @@ export const INITIAL_PACKAGES = [
     desc: "Cânions imponentes e as mais altas cachoeiras do estado repletas de história.",
     image: "images/vila_bela.png",
     days: "4 Dias",
-    price: "R$ 1.700",
+    price: "R$ 1.700,00",
+    installment: "6x de R$ 283,33",
     order: 6,
     link: "https://wa.me/5511961781661?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20pacote%20para%20Vila%20Bela."
   }
@@ -153,7 +159,16 @@ export const getLocalPackages = () => {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
+        return parsed.map((item) => {
+          if (!item.installment) {
+            const foundInit = INITIAL_PACKAGES.find((p) => p.id === item.id);
+            if (foundInit?.installment) {
+              return { ...item, installment: foundInit.installment };
+            }
+            return { ...item, installment: '6x de R$ 349,98' };
+          }
+          return item;
+        });
       }
     }
   } catch (err) {

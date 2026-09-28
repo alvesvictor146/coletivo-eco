@@ -76,7 +76,8 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
     title: '',
     desc: '',
     days: '4 Dias',
-    price: 'R$ 1.890',
+    price: 'R$ 2.099,90',
+    installment: '6x de R$ 349,98',
     image: '',
     order: 1,
     link: ''
@@ -289,7 +290,8 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
       title: '',
       desc: '',
       days: '4 Dias',
-      price: 'R$ 1.890',
+      price: 'R$ 2.099,90',
+      installment: '6x de R$ 349,98',
       image: 'images/chapada_guimaraes_1783969294083.png',
       order: nextOrder,
       link: ''
@@ -305,7 +307,8 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
       title: item.title || '',
       desc: item.desc || '',
       days: item.days || '4 Dias',
-      price: item.price || 'R$ 1.890',
+      price: item.price || 'R$ 2.099,90',
+      installment: item.installment || '6x de R$ 349,98',
       image: item.image || '',
       order: item.order !== undefined ? Number(item.order) : 1,
       link: item.link || ''
@@ -393,6 +396,7 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
         desc: packageFormData.desc.trim(),
         days: packageFormData.days.trim(),
         price: packageFormData.price.trim(),
+        installment: packageFormData.installment ? packageFormData.installment.trim() : '6x de R$ 349,98',
         image: finalImageUrl,
         order: Number(packageFormData.order) || 1,
         link: finalLink
@@ -672,7 +676,11 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                     <div className="package-admin-info">
                       <div className="package-meta-row">
                         <span className="package-days-badge">{pkg.days}</span>
-                        <span className="package-price-tag">A partir de <strong>{pkg.price}</strong></span>
+                        <span className="package-price-tag"><strong>{pkg.installment || '6x de R$ 349,98'}</strong></span>
+                      </div>
+
+                      <div style={{ fontSize: '0.82rem', color: '#64748b', margin: '4px 0 8px 0', textAlign: 'left' }}>
+                        A partir de: <strong style={{ color: '#172a4f' }}>{pkg.price || 'R$ 2.099,90'}</strong>
                       </div>
 
                       <h3>{pkg.title}</h3>
@@ -908,20 +916,21 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                 <div className="form-group-admin">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <label htmlFor="pkg-desc">Descrição do Pacote *</label>
-                    <span style={{ fontSize: '0.78rem', color: packageFormData.desc.length > 250 ? '#e63946' : '#64748b' }}>
+                    <span style={{ fontSize: '0.78rem', color: packageFormData.desc.length > 600 ? '#e63946' : '#64748b' }}>
                       {packageFormData.desc.length} caracteres
                     </span>
                   </div>
                   <textarea
                     id="pkg-desc"
-                    rows="3"
+                    rows="6"
                     required
-                    placeholder="Descreva as principais atrações e experiências deste pacote..."
+                    style={{ whiteSpace: 'pre-wrap', lineHeight: '1.5', fontFamily: 'inherit' }}
+                    placeholder="✓ Organização da viagem&#10;✓ Transporte ida e volta&#10;✓ Hospedagem com café da manhã&#10;✓ Passeios inclusos com ingressos&#10;✓ Guias Cadastrados"
                     value={packageFormData.desc}
                     onChange={(e) => setPackageFormData({ ...packageFormData, desc: e.target.value })}
                   />
                   <small style={{ color: '#64748b' }}>
-                    Recomendado: 80 a 160 caracteres para melhor equilíbrio nos cards do site.
+                    Dica: Você pode pular linhas e incluir marcadores (ex: ✓). A formatação e espaçamento serão exibidos exatamente iguais nos cards do site.
                   </small>
                 </div>
 
@@ -938,19 +947,6 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                   </div>
 
                   <div className="form-group-admin">
-                    <label htmlFor="pkg-price">Preço</label>
-                    <input
-                      id="pkg-price"
-                      type="text"
-                      placeholder="Ex: R$ 1.890"
-                      value={packageFormData.price}
-                      onChange={(e) => setPackageFormData({ ...packageFormData, price: e.target.value })}
-                    />
-                  </div>
-                </div>
-
-                <div className="form-row-2">
-                  <div className="form-group-admin">
                     <label htmlFor="pkg-order">Ordem de Exibição</label>
                     <input
                       id="pkg-order"
@@ -960,25 +956,55 @@ const AdminPanel = ({ onLogout, onGoToSite }) => {
                       onChange={(e) => setPackageFormData({ ...packageFormData, order: e.target.value })}
                     />
                   </div>
+                </div>
 
+                <div className="form-row-2">
                   <div className="form-group-admin">
-                    <label htmlFor="pkg-image-url">URL da Imagem (Externa ou Local)</label>
+                    <label htmlFor="pkg-installment">Valor da Parcela (Destaque) *</label>
                     <input
-                      id="pkg-image-url"
+                      id="pkg-installment"
                       type="text"
-                      placeholder="images/exemplo.png ou https://..."
-                      value={packageFormData.image}
-                      onChange={(e) => {
-                        setPackageFormData({ ...packageFormData, image: e.target.value });
-                        if (!imageFile) {
-                          setImagePreview(e.target.value);
-                        }
-                      }}
+                      placeholder="Ex: 6x de R$ 349,98"
+                      value={packageFormData.installment}
+                      onChange={(e) => setPackageFormData({ ...packageFormData, installment: e.target.value })}
                     />
-                    <small style={{ color: imageFile ? '#b45309' : '#64748b' }}>
-                      {imageFile ? '⚠️ O arquivo do computador selecionado abaixo terá prioridade.' : 'Usado caso nenhum arquivo seja enviado pelo botão abaixo.'}
+                    <small style={{ color: '#64748b' }}>
+                      Exibido em destaque: "a partir de 6x de R$..."
                     </small>
                   </div>
+
+                  <div className="form-group-admin">
+                    <label htmlFor="pkg-price">Valor "A partir de" (Total / À vista) *</label>
+                    <input
+                      id="pkg-price"
+                      type="text"
+                      placeholder="Ex: R$ 2.099,90"
+                      value={packageFormData.price}
+                      onChange={(e) => setPackageFormData({ ...packageFormData, price: e.target.value })}
+                    />
+                    <small style={{ color: '#64748b' }}>
+                      Exibido no rodapé: "A partir de R$... | Taxas inclusas"
+                    </small>
+                  </div>
+                </div>
+
+                <div className="form-group-admin">
+                  <label htmlFor="pkg-image-url">URL da Imagem (Externa ou Local)</label>
+                  <input
+                    id="pkg-image-url"
+                    type="text"
+                    placeholder="images/exemplo.png ou https://..."
+                    value={packageFormData.image}
+                    onChange={(e) => {
+                      setPackageFormData({ ...packageFormData, image: e.target.value });
+                      if (!imageFile) {
+                        setImagePreview(e.target.value);
+                      }
+                    }}
+                  />
+                  <small style={{ color: imageFile ? '#b45309' : '#64748b' }}>
+                    {imageFile ? '⚠️ O arquivo do computador selecionado abaixo terá prioridade.' : 'Usado caso nenhum arquivo seja enviado pelo botão abaixo.'}
+                  </small>
                 </div>
 
                 {/* Upload e Preview de Imagem com DT-02 e DT-08 */}
