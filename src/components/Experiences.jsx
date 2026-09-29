@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaWater, FaHiking, FaSwimmer, FaShip, FaMountain, FaCampground, FaCamera } from 'react-icons/fa';
+import { FaWater, FaHiking, FaSwimmer, FaShip, FaMountain, FaCampground, FaCamera, FaFeatherAlt } from 'react-icons/fa';
 import './Experiences.css';
 
 const experiencesData = [
@@ -10,6 +10,7 @@ const experiencesData = [
   { icon: <FaMountain />, title: "Rapel", desc: "Aventura e adrenalina nas maiores rochas." },
   { icon: <FaCampground />, title: "Camping", desc: "Conexão total com a natureza sob o céu estrelado." },
   { icon: <FaCamera />, title: "Observação", desc: "Safáris fotográficos para ver animais silvestres." },
+  { icon: <FaFeatherAlt />, title: "Etnoturismo", desc: "Imersão cultural e vivências com povos originários." },
 ];
 
 const Experiences = () => {
@@ -18,7 +19,7 @@ const Experiences = () => {
       <div className="container">
         <div className="section-header text-center reveal-up">
           <h2>Vivencie o Inexplicável</h2>
-          <p>Oferecemos um leque de aventuras para você se conectar profundamente com a natureza.</p>
+          <p>Oferecendo um leque de experiências para você se conectar profundamente com a natureza.</p>
         </div>
         
         <div className="experiences-grid">
