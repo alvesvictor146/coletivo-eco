@@ -60,31 +60,29 @@ const Footer = () => {
       <footer className="footer-section">
         <div className="container footer-container">
           <div className="footer-main-content">
-            {/* Lado Esquerdo: Prêmios, Cadastur e Redes Sociais */}
+            {/* Lado Esquerdo: Prêmios, Cadastur e Redes Sociais alinhados em coluna */}
             <div className="footer-left-col">
-              <div className="footer-badges-row">
-                <div className="award-badge-group">
-                  <TripAdvisorAwardBadge />
-                  <div className="award-text-content">
-                    <span className="award-title-label">Prêmios:</span>
-                    <span className="award-name">Travellers' Choice 2025</span>
-                  </div>
+              <div className="award-badge-group">
+                <TripAdvisorAwardBadge />
+                <div className="award-text-content">
+                  <span className="award-title-label">Prêmios:</span>
+                  <span className="award-name">Travellers' Choice 2025</span>
                 </div>
-
-                <a 
-                  href="https://cadastur.turismo.gov.br" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="footer-cadastur-link"
-                  title="Cadastur - Ministério do Turismo"
-                >
-                  <img 
-                    src={`${import.meta.env.BASE_URL}images/cadastur-white.png`} 
-                    alt="Cadastur Ministério do Turismo" 
-                    className="footer-cadastur-logo-white"
-                  />
-                </a>
               </div>
+
+              <a 
+                href="https://cadastur.turismo.gov.br" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="footer-cadastur-link"
+                title="Cadastur - Ministério do Turismo"
+              >
+                <img 
+                  src={`${import.meta.env.BASE_URL}images/cadastur-white.png`} 
+                  alt="Cadastur Ministério do Turismo" 
+                  className="footer-cadastur-logo-white"
+                />
+              </a>
 
               <div className="footer-social-group">
                 <span className="footer-social-label">Siga-nos:</span>
