@@ -30,63 +30,75 @@ const Footer = () => {
 
       <footer className="footer-section">
         <div className="container footer-container">
-          <div className="footer-institutional-box">
-            <h3 className="footer-institutional-title">Institucional</h3>
-            <div className="footer-yellow-line"></div>
-
-            <div className="footer-info-list">
-              <div className="footer-info-item brand-name-item">
-                <span className="footer-text font-bold">Coletivo Eco – Viagens 🌿</span>
+          <div className="footer-main-content">
+            <div className="footer-cadastur-side">
+              <div className="footer-cadastur-card">
+                <img 
+                  src={`${import.meta.env.BASE_URL}images/cadastur.png`} 
+                  alt="Cadastur - Ministério do Turismo" 
+                  className="footer-cadastur-img"
+                />
               </div>
+            </div>
 
-              <div className="footer-info-item">
-                <span className="footer-text">🏆 Travellers’ Choice 2025 – TripAdvisor</span>
-              </div>
+            <div className="footer-institutional-box">
+              <h3 className="footer-institutional-title">Institucional</h3>
+              <div className="footer-yellow-line"></div>
 
-              <div className="footer-info-item">
-                <span className="footer-text">
-                  <strong className="footer-label">📋 Cadastur:</strong> 41.105.193/0001-22
-                </span>
-              </div>
+              <div className="footer-info-list">
+                <div className="footer-info-item brand-name-item">
+                  <span className="footer-text font-bold">Coletivo Eco – Viagens</span>
+                </div>
 
-              <div className="footer-info-item">
-                <span className="footer-text">
-                  <strong className="footer-label">📱 WhatsApp:</strong>{' '}
-                  <a 
-                    href="https://wa.me/5511961781661?text=Olá!%20Gostaria%20de%20falar%20com%20a%20equipe%20da%20Coletivo%20Eco." 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="footer-link"
-                  >
-                    +55 11 96178-1661
-                  </a>
-                </span>
-              </div>
+                <div className="footer-info-item">
+                  <span className="footer-text">Travellers’ Choice 2025 – TripAdvisor</span>
+                </div>
 
-              <div className="footer-info-item">
-                <span className="footer-text">
-                  <strong className="footer-label">📧 Email:</strong>{' '}
-                  <a 
-                    href="mailto:atendimento@coletivo-eco.com.br"
-                    className="footer-link"
-                  >
-                    atendimento@coletivo-eco.com.br
-                  </a>
-                </span>
-              </div>
+                <div className="footer-info-item">
+                  <span className="footer-text">
+                    <strong className="footer-label">Cadastur:</strong> 41.105.193/0001-22
+                  </span>
+                </div>
 
-              <div className="footer-info-item">
-                <span className="footer-text">
-                  <strong className="footer-label">📲 Instagram:</strong>{' '}
-                  <a 
-                    href="https://www.instagram.com/coletivoeco" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="footer-link"
-                  >
-                    @coletivoeco
-                  </a>
-                </span>
+                <div className="footer-info-item">
+                  <span className="footer-text">
+                    <strong className="footer-label">WhatsApp:</strong>{' '}
+                    <a 
+                      href="https://wa.me/5511961781661?text=Olá!%20Gostaria%20de%20falar%20com%20a%20equipe%20da%20Coletivo%20Eco." 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="footer-link"
+                    >
+                      +55 11 96178-1661
+                    </a>
+                  </span>
+                </div>
+
+                <div className="footer-info-item">
+                  <span className="footer-text">
+                    <strong className="footer-label">Email:</strong>{' '}
+                    <a 
+                      href="mailto:atendimento@coletivo-eco.com.br"
+                      className="footer-link"
+                    >
+                      atendimento@coletivo-eco.com.br
+                    </a>
+                  </span>
+                </div>
+
+                <div className="footer-info-item">
+                  <span className="footer-text">
+                    <strong className="footer-label">Instagram:</strong>{' '}
+                    <a 
+                      href="https://www.instagram.com/coletivoeco" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="footer-link"
+                    >
+                      @coletivoeco
+                    </a>
+                  </span>
+                </div>
               </div>
             </div>
           </div>

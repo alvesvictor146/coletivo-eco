@@ -46,7 +46,7 @@
 .footer-section {
   background: linear-gradient(180deg, #0d2c58 0%, #091e3e 100%);
   color: var(--color-white);
-  padding: 70px 20px 35px;
+  padding: 65px 20px 35px;
   position: relative;
 }
 
@@ -54,18 +54,60 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 1000px;
+  max-width: 1050px;
   margin: 0 auto;
   width: 100%;
 }
 
-/* Institutional Box - Centered horizontally, left-aligned text */
-.footer-institutional-box {
+/* Two-column layout: Cadastur on left, Letreiro on right */
+.footer-main-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 40px;
+  padding: 0 15px;
+}
+
+.footer-cadastur-side {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.footer-cadastur-card {
+  background: #ffffff;
+  padding: 16px 28px;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.footer-cadastur-card:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+}
+
+.footer-cadastur-img {
+  width: 230px;
+  height: auto;
+  max-height: 60px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Institutional Box (adjusted to the right) */
+.footer-institutional-box {
+  display: flex;
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  margin: 0 auto;
+  min-width: 360px;
+  max-width: 480px;
 }
 
 .footer-institutional-title {
@@ -135,11 +177,11 @@
 /* Bottom info */
 .footer-bottom-info {
   text-align: center;
-  margin-top: 55px;
+  margin-top: 50px;
   padding-top: 25px;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   width: 100%;
-  max-width: 900px;
+  max-width: 1050px;
 }
 
 .rights-line {
@@ -149,10 +191,22 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 820px) {
+  .footer-main-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 35px;
+  }
+
+  .footer-cadastur-side {
+    justify-content: center;
+  }
+
   .footer-institutional-box {
     align-items: center;
     text-align: center;
+    min-width: unset;
+    width: 100%;
   }
 
   .footer-institutional-title {
