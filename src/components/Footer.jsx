@@ -2,6 +2,34 @@ import React from 'react';
 import { FaInstagram, FaFacebookF } from 'react-icons/fa';
 import './Footer.css';
 
+const TripAdvisorAwardBadge = () => (
+  <svg viewBox="0 0 100 100" width="66" height="66" className="tripadvisor-svg-badge" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="48" fill="#00EB7B" />
+    <text x="50" y="24" textAnchor="middle" fill="#000000" fontSize="7.5" fontWeight="800" fontFamily="'Montserrat', 'Inter', sans-serif">
+      Tripadvisor
+    </text>
+    <text x="50" y="32" textAnchor="middle" fill="#000000" fontSize="6.5" fontWeight="700" fontFamily="'Montserrat', 'Inter', sans-serif">
+      Travelers'
+    </text>
+    <text x="50" y="39" textAnchor="middle" fill="#000000" fontSize="6" fontWeight="600" fontFamily="'Montserrat', 'Inter', sans-serif">
+      Choice Awards
+    </text>
+    <g transform="translate(32, 43) scale(0.36)">
+      <circle cx="24" cy="24" r="18" fill="none" stroke="#000000" strokeWidth="4.5" />
+      <circle cx="76" cy="24" r="18" fill="none" stroke="#000000" strokeWidth="4.5" />
+      <circle cx="24" cy="24" r="7" fill="#000000" />
+      <circle cx="76" cy="24" r="7" fill="#000000" />
+      <path d="M 42,24 L 58,24" stroke="#000000" strokeWidth="4.5" />
+      <polygon points="50,28 44,38 56,38" fill="#000000" />
+      <path d="M 4,14 C -2,28 6,42 14,50" fill="none" stroke="#000000" strokeWidth="3.5" />
+      <path d="M 96,14 C 102,28 94,42 86,50" fill="none" stroke="#000000" strokeWidth="3.5" />
+    </g>
+    <text x="50" y="78" textAnchor="middle" fill="#000000" fontSize="8.5" fontWeight="800" fontFamily="'Montserrat', 'Inter', sans-serif">
+      2025
+    </text>
+  </svg>
+);
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -32,21 +60,31 @@ const Footer = () => {
       <footer className="footer-section">
         <div className="container footer-container">
           <div className="footer-main-content">
-            {/* Lado Esquerdo: Cadastur e Redes Sociais */}
+            {/* Lado Esquerdo: Prêmios, Cadastur e Redes Sociais */}
             <div className="footer-left-col">
-              <a 
-                href="https://cadastur.turismo.gov.br" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="footer-cadastur-link"
-                title="Cadastur - Ministério do Turismo"
-              >
-                <img 
-                  src={`${import.meta.env.BASE_URL}images/cadastur-white.png`} 
-                  alt="Cadastur Ministério do Turismo" 
-                  className="footer-cadastur-logo-white"
-                />
-              </a>
+              <div className="footer-badges-row">
+                <div className="award-badge-group">
+                  <TripAdvisorAwardBadge />
+                  <div className="award-text-content">
+                    <span className="award-title-label">Prêmios:</span>
+                    <span className="award-name">Travellers' Choice 2025</span>
+                  </div>
+                </div>
+
+                <a 
+                  href="https://cadastur.turismo.gov.br" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="footer-cadastur-link"
+                  title="Cadastur - Ministério do Turismo"
+                >
+                  <img 
+                    src={`${import.meta.env.BASE_URL}images/cadastur-white.png`} 
+                    alt="Cadastur Ministério do Turismo" 
+                    className="footer-cadastur-logo-white"
+                  />
+                </a>
+              </div>
 
               <div className="footer-social-group">
                 <span className="footer-social-label">Siga-nos:</span>
@@ -56,16 +94,16 @@ const Footer = () => {
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="social-btn instagram"
-                    aria-label="Instagram"
+                    aria-label="Instagram @coletivoeco"
                   >
                     <FaInstagram />
                   </a>
                   <a 
-                    href="https://facebook.com/coletivoeco" 
+                    href="https://www.facebook.com/coletivo.ecotur" 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="social-btn facebook"
-                    aria-label="Facebook"
+                    aria-label="Facebook @coletivo.ecotur"
                   >
                     <FaFacebookF />
                   </a>
