@@ -41,14 +41,26 @@ const Hero = () => {
         </p>
 
         <div className="social-proof-hero reveal-up delay-300">
-          <div className="proof-item">
+          <a 
+            href="https://www.tripadvisor.com.br/Attraction_Review-g2159104-d25301562-Reviews-Coletivo_Eco-Alto_Paraiso_de_Goias_Chapada_dos_Veadeiros_National_Park_State_of.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="proof-item proof-link"
+            title="Ver no TripAdvisor"
+          >
             <span>🏆</span>
             <strong>Traveller's Choice 2025</strong>
-          </div>
-          <div className="proof-item flex-col">
+          </a>
+          <a 
+            href="https://share.google/mJkx897JmYoY1bVEy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="proof-item flex-col proof-link"
+            title="Ver avaliações no Google"
+          >
             <span className="stars">⭐⭐⭐⭐⭐</span>
             <span className="proof-text"><strong>5.0</strong> (71 avaliações Google)</span>
-          </div>
+          </a>
           <div className="proof-item">
             <span>👥</span>
             Mais de <strong>2.000</strong> viajantes atendidos

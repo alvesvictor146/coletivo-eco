@@ -66,9 +66,18 @@ const Testimonials = () => {
                     <span className="google-name">{testimonial.name}</span>
                     <span className="google-date">{testimonial.date}</span>
                   </div>
-                  <div className="google-logo">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" width="20" />
-                  </div>
+                  <a 
+                    href="https://share.google/mJkx897JmYoY1bVEy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="google-logo-link"
+                    title="Ver perfil e avaliações no Google"
+                    aria-label="Ver perfil e avaliações no Google"
+                  >
+                    <div className="google-logo">
+                      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" width="20" />
+                    </div>
+                  </a>
                 </div>
                 <div className="google-stars">
                   {[...Array(testimonial.stars)].map((_, i) => <FaStar key={i} color="#fbbc04" />)}

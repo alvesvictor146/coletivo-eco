@@ -151,8 +151,26 @@
   font-size: 0.8rem;
 }
 
-.google-logo {
+.google-logo-link {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.google-logo-link:hover {
+  transform: scale(1.18);
+  opacity: 0.85;
+}
+
+.google-logo {
+  display: flex;
+  align-items: center;
 }
 
 .google-stars {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaInstagram, FaFacebookF } from 'react-icons/fa';
+import { FaInstagram, FaFacebookF, FaTripadvisor } from 'react-icons/fa';
 import './Footer.css';
 
 const TripAdvisorAwardBadge = () => (
@@ -62,13 +62,20 @@ const Footer = () => {
           <div className="footer-main-content">
             {/* Lado Esquerdo: Prêmios, Cadastur e Redes Sociais alinhados em coluna */}
             <div className="footer-left-col">
-              <div className="award-badge-group">
+              <a 
+                href="https://www.tripadvisor.com.br/Attraction_Review-g2159104-d25301562-Reviews-Coletivo_Eco-Alto_Paraiso_de_Goias_Chapada_dos_Veadeiros_National_Park_State_of.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="award-badge-group"
+                title="Ver avaliações no TripAdvisor"
+                aria-label="TripAdvisor Travelers' Choice 2025"
+              >
                 <TripAdvisorAwardBadge />
                 <div className="award-text-content">
                   <span className="award-title-label">Prêmios:</span>
                   <span className="award-name">Travellers' Choice 2025</span>
                 </div>
-              </div>
+              </a>
 
               <a 
                 href="https://cadastur.turismo.gov.br" 
@@ -93,6 +100,7 @@ const Footer = () => {
                     rel="noopener noreferrer" 
                     className="social-btn instagram"
                     aria-label="Instagram @coletivoeco"
+                    title="Instagram @coletivoeco"
                   >
                     <FaInstagram />
                   </a>
@@ -102,8 +110,19 @@ const Footer = () => {
                     rel="noopener noreferrer" 
                     className="social-btn facebook"
                     aria-label="Facebook @coletivo.ecotur"
+                    title="Facebook @coletivo.ecotur"
                   >
                     <FaFacebookF />
+                  </a>
+                  <a 
+                    href="https://www.tripadvisor.com.br/Attraction_Review-g2159104-d25301562-Reviews-Coletivo_Eco-Alto_Paraiso_de_Goias_Chapada_dos_Veadeiros_National_Park_State_of.html" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="social-btn tripadvisor"
+                    aria-label="TripAdvisor Coletivo Eco"
+                    title="TripAdvisor"
+                  >
+                    <FaTripadvisor />
                   </a>
                 </div>
               </div>
