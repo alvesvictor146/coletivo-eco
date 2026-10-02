@@ -3,11 +3,36 @@ import { FaStar, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import './Testimonials.css';
 
 const testimonialsData = [
-  { name: "Mariana Silva", text: "A melhor viagem da minha vida! A equipe do Coletivo Eco organizou tudo perfeitamente na Chapada.", stars: 5 },
-  { name: "João Pedro", text: "Flutuar em Nobres foi uma experiência mágica. Recomendo de olhos fechados, serviço super premium.", stars: 5 },
-  { name: "Carla & Marcos", text: "Nosso safári no Pantanal foi inesquecível. Vimos onças e uma natureza intocada. Fantástico!", stars: 5 },
-  { name: "Fernanda Costa", text: "Atendimento impecável desde o primeiro contato. Guias muito experientes e atenciosos.", stars: 5 },
-  { name: "Lucas Almeida", text: "A energia de Barra do Garças é única, e a pousada que ficamos era de extremo luxo e conforto.", stars: 5 }
+  {
+    name: "Mais Verde Mais Vida",
+    date: "uma semana atrás",
+    stars: 5,
+    text: "Fiz o roteiro Chapada dos Guimarães e Nobres. Foi tudo perfeito, muito bem organizado e conduzido."
+  },
+  {
+    name: "Joice Correa",
+    date: "um ano atrás",
+    stars: 5,
+    text: "Contratamos o serviço para conhecer a Chapada dos Guimarães e ficamos muito felizes com o atendimento do início ao fim! A Rose foi a nossa guia e ela é uma querida! Recomendamos a todos!"
+  },
+  {
+    name: "Luiza Vivan",
+    date: "4 meses atrás",
+    stars: 5,
+    text: "Viajem para a Chapada dos Guimarães foi excelente, guias muito prestativo e atenciosos, roteiro incrível! Recomendo!"
+  },
+  {
+    name: "Jaqueline Marques",
+    date: "7 meses atrás",
+    stars: 5,
+    text: "Incrível! Experiência excelente no Mato Grosso, equipe muito prestativa e capacitada! Tudo bem organizado.. Recomendo"
+  },
+  {
+    name: "Raphaela Barros",
+    date: "2 anos atrás",
+    stars: 5,
+    text: "Já fechei três pacotes de viagem com a empresa (Saco do Mamanguá, Chapada dos Veadeiros e Barra do Garças) e super recomendo. A equipe é muito profissional, organizada, atenciosa e receptiva."
+  }
 ];
 
 const Testimonials = () => {
@@ -39,7 +64,7 @@ const Testimonials = () => {
                   <div className="google-avatar">{testimonial.name.charAt(0)}</div>
                   <div className="google-info">
                     <span className="google-name">{testimonial.name}</span>
-                    <span className="google-date">1 mês atrás</span>
+                    <span className="google-date">{testimonial.date}</span>
                   </div>
                   <div className="google-logo">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" width="20" />
